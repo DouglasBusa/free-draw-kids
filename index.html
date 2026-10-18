@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Free Draw Kids</title>
+<link rel="stylesheet" href="style.css">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#4A90E2">
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>✏️ Free Draw Kids</h1>
+    <p class="tagline">No ads • No subscriptions • Just draw</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="draw">Free Draw</button>
+    <button class="tab" data-tab="learn">Learn to Draw</button>
+  </nav>
+
+  <!-- Free Draw Tab -->
+  <section id="draw-tab" class="tab-content active">
+    <div class="toolbar">
+      <div class="colors">
+        <button class="color-btn active" data-color="#000000" style="background:#000"></button>
+        <button class="color-btn" data-color="#FF3B30" style="background:#FF3B30"></button>
+        <button class="color-btn" data-color="#FF9500" style="background:#FF9500"></button>
+        <button class="color-btn" data-color="#FFCC00" style="background:#FFCC00"></button>
+        <button class="color-btn" data-color="#34C759" style="background:#34C759"></button>
+        <button class="color-btn" data-color="#007AFF" style="background:#007AFF"></button>
+        <button class="color-btn" data-color="#5856D6" style="background:#5856D6"></button>
+        <button class="color-btn" data-color="#AF52DE" style="background:#AF52DE"></button>
+        <button class="color-btn" data-color="#8E8E93" style="background:#8E8E93"></button>
+        <button class="color-btn" data-color="#FFFFFF" style="background:#FFF; border:1px solid #ccc"></button>
+      </div>
+      <div class="tools">
+        <label>Size <input type="range" id="brushSize" min="2" max="40" value="8"></label>
+        <button id="eraserBtn">Eraser</button>
+        <button id="clearBtn">Clear</button>
+        <button id="saveBtn">Save</button>
+      </div>
+    </div>
+    <canvas id="drawCanvas"></canvas>
+  </section>
+
+  <!-- Learn Tab -->
+  <section id="learn-tab" class="tab-content">
+    <div class="lesson-list">
+      <button class="lesson-card" data-lesson="fish">🐟 Simple Fish</button>
+      <button class="lesson-card" data-lesson="cat">🐱 Happy Cat</button>
+      <button class="lesson-card" data-lesson="tree">🌳 Tree</button>
+      <button class="lesson-card" data-lesson="sun">☀️ Sun</button>
+      <button class="lesson-card" data-lesson="house">🏠 House</button>
+    </div>
+    <div id="lesson-viewer" class="hidden">
+      <button id="backToLessons">← Back</button>
+      <h2 id="lessonTitle"></h2>
+      <div class="lesson-steps">
+        <canvas id="guideCanvas"></canvas>
+        <div class="step-info">
+          <p id="stepText"></p>
+          <button id="nextStep">Next Step</button>
+          <button id="prevStep">Previous</button>
+        </div>
+      </div>
+      <p class="hint">Draw along on paper or use Free Draw tab!</p>
+    </div>
+  </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
