@@ -87,11 +87,67 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.restore();
 });
+// Save & Share: copy the drawing onto a white background at full resolution
+function exportDrawing(callback) {
+  const out = document.createElement('canvas');
+  out.width = canvas.width;
+  out.height = canvas.height;
+  const outCtx = out.getContext('2d');
+  outCtx.fillStyle = '#FFFFFF';
+  outCtx.fillRect(0, 0, out.width, out.height);
+  outCtx.drawImage(canvas, 0, 0);
+  out.toBlob(callback, 'image/png');
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+function downloadBlob(blob) {
+  const url = URL.createObjectURL(blob);
+  if (isIOS && !('download' in HTMLAnchorElement.prototype)) {
+    // Old iOS Safari ignores download links, so open the picture instead
+    window.open(url, '_blank');
+    showToast('Press and hold the picture to save it');
+  } else {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'drawing.png';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
 document.getElementById('saveBtn').addEventListener('click', () => {
-  const link = document.createElement('a');
-  link.download = 'drawing.png';
-  link.href = canvas.toDataURL();
-  link.click();
+  exportDrawing(blob => {
+    if (blob) downloadBlob(blob);
+  });
+});
+
+document.getElementById('shareBtn').addEventListener('click', () => {
+  exportDrawing(blob => {
+    if (!blob) return;
+    const file = new File([blob], 'drawing.png', { type: 'image/png' });
+    const fallback = () => {
+      downloadBlob(blob);
+      showToast("Sharing isn't available here, so we saved your drawing instead!");
+    };
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'My Drawing', text: 'Look what I drew on Free Draw Kids!' })
+        .catch(err => { if (err.name !== 'AbortError') fallback(); });
+    } else {
+      fallback();
+    }
+  });
 });
 
 document.querySelectorAll('.tab').forEach(tab => {
