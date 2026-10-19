@@ -89,7 +89,6 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// Lessons with Artie's improved drawings
 const lessons = {
   snail: {
     title: "Happy Snail",
@@ -139,11 +138,11 @@ const lessons = {
     title: "Ice Cream Cone",
     steps: ["Draw an upside-down triangle cone.", "Add crisscross lines.", "Draw a circle scoop on top.", "Add another scoop if you want.", "Top with a cherry."],
     draw: [
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.02*s); c.lineTo(x + 0.15*s, y + 0.02*s); c.lineTo(x, y + 0.4*s); c.closePath(); c.stroke(); },
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.save(); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.02*s); c.lineTo(x + 0.15*s, y + 0.02*s); c.lineTo(x, y + 0.4*s); c.closePath(); c.clip(); c.beginPath(); for (let i = -3; i <= 3; i++) { const o = i*0.07*s; c.moveTo(x - 0.2*s + o, y); c.lineTo(x + 0.2*s + o, y + 0.4*s); c.moveTo(x + 0.2*s + o, y); c.lineTo(x - 0.2*s + o, y + 0.4*s); } c.stroke(); c.restore(); },
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.02*s, 0.17*s, Math.PI, 0); c.stroke(); },
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.18*s, 0.13*s, Math.PI, 0); c.stroke(); },
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.35*s, 0.04*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(x, y - 0.39*s); c.quadraticCurveTo(x + 0.01*s, y - 0.45*s, x + 0.05*s, y - 0.47*s); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.01*s); c.lineTo(x + 0.15*s, y + 0.01*s); c.lineTo(x, y + 0.37*s); c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.save(); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.01*s); c.lineTo(x + 0.15*s, y + 0.01*s); c.lineTo(x, y + 0.37*s); c.closePath(); c.clip(); c.beginPath(); for (let i = -4; i <= 4; i++) { const o = i * 0.07*s; c.moveTo(x - 0.2*s + o, y + 0.01*s); c.lineTo(x + 0.2*s + o, y + 0.37*s); c.moveTo(x + 0.2*s + o, y + 0.01*s); c.lineTo(x - 0.2*s + o, y + 0.37*s); } c.stroke(); c.restore(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); const rx = 0.18*s, ry = 0.14*s, base = y - 0.01*s, d = 0.02*s, n = 5, step = (2*rx)/n; c.beginPath(); c.moveTo(x - rx, base); c.ellipse(x, base, rx, ry, 0, Math.PI, Math.PI*2); for (let i = 0; i < n; i++) { const x0 = x + rx - step*i; c.quadraticCurveTo(x0 - step/2, base + 2*d, x0 - step, base); } c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); const rx = 0.14*s, ry = 0.11*s, base = y - 0.165*s, d = 0.015*s, n = 4, step = (2*rx)/n; c.beginPath(); c.moveTo(x - rx, base); c.ellipse(x, base, rx, ry, 0, Math.PI, Math.PI*2); for (let i = 0; i < n; i++) { const x0 = x + rx - step*i; c.quadraticCurveTo(x0 - step/2, base + 2*d, x0 - step, base); } c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.31*s, 0.035*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(x, y - 0.345*s); c.quadraticCurveTo(x + 0.01*s, y - 0.39*s, x + 0.05*s, y - 0.4*s); c.stroke(); }
     ]
   },
   penguin: {
