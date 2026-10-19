@@ -181,3 +181,5 @@ body.dark-mode .hint { color: #aaa; }
 /* Canvases always stay white, even in dark mode */
 body.dark-mode canvas { background: #ffffff !important; }
 .step-info button:disabled { opacity: 0.4; cursor: default; }
+.credit { text-align: center; margin-top: 20px; font-size: 0.75rem; color: #888; }
+.credit a { color: inherit; }

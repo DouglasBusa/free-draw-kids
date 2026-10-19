@@ -362,11 +362,11 @@ darkModeBtn.addEventListener('click', () => {
   setDarkMode(!document.body.classList.contains('dark-mode'));
 });
 
-// Lofi music (play() only runs from a click, so browsers allow it)
+// Background music (play() only runs from a click, so browsers allow it)
 const audio = document.getElementById('lofiAudio');
 const musicBtn = document.getElementById('musicBtn');
 function updateMusicBtn() {
-  musicBtn.textContent = audio.paused ? '🎵 Play Lofi' : '⏸ Pause Lofi';
+  musicBtn.textContent = audio.paused ? '🎵 Play Music' : '⏸ Pause Music';
 }
 audio.volume = 0.3;
 audio.addEventListener('play', updateMusicBtn);
@@ -377,7 +377,7 @@ musicBtn.addEventListener('click', () => {
     const playing = audio.play();
     if (playing) {
       playing.catch(err => {
-        console.warn('Lofi could not play:', err);
+        console.warn('Music could not play:', err);
         updateMusicBtn();
       });
     }
