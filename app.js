@@ -270,6 +270,12 @@ function renderStep() {
     if (currentLesson.draw[i]) currentLesson.draw[i](guideCtx, w, h);
   }
   document.getElementById('stepText').textContent = `Step ${currentStep + 1}: ${currentLesson.steps[currentStep]}`;
+  const nextBtn = document.getElementById('nextStep');
+  if (currentStep >= currentLesson.steps.length - 1) {
+    nextBtn.textContent = 'Back to Lessons';
+  } else {
+    nextBtn.textContent = 'Next Step';
+  }
 }
 
 document.querySelectorAll('.lesson-card').forEach(card => {
@@ -284,7 +290,15 @@ document.getElementById('backToLessons').addEventListener('click', () => {
 });
 
 document.getElementById('nextStep').addEventListener('click', () => {
-  if (currentLesson && currentStep < currentLesson.steps.length - 1) { currentStep++; renderStep(); }
+  if (!currentLesson) return;
+  if (currentStep < currentLesson.steps.length - 1) {
+    currentStep++;
+    renderStep();
+  } else {
+    // Last step: go back to lesson list
+    document.querySelector('.lesson-list').classList.remove('hidden');
+    document.getElementById('lesson-viewer').classList.add('hidden');
+  }
 });
 
 document.getElementById('prevStep').addEventListener('click', () => {
