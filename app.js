@@ -13,10 +13,19 @@ let lastX = 0, lastY = 0;
 function resizeCanvases() {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
-  if (rect.width > 0 && rect.height > 0) {
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
+  const newW = Math.round(rect.width * dpr);
+  const newH = Math.round(rect.height * dpr);
+  // Only resize when the size really changed (mobile browsers fire 'resize'
+  // when the address bar moves), and copy the drawing so it isn't wiped.
+  if (newW > 0 && newH > 0 && (newW !== canvas.width || newH !== canvas.height)) {
+    const saved = document.createElement('canvas');
+    saved.width = canvas.width;
+    saved.height = canvas.height;
+    saved.getContext('2d').drawImage(canvas, 0, 0);
+    canvas.width = newW;
+    canvas.height = newH;
+    ctx.drawImage(saved, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   }
@@ -72,7 +81,12 @@ document.getElementById('eraserBtn').addEventListener('click', () => {
   isEraser = !isEraser;
   document.getElementById('eraserBtn').classList.toggle('active', isEraser);
 });
-document.getElementById('clearBtn').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
+document.getElementById('clearBtn').addEventListener('click', () => {
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+});
 document.getElementById('saveBtn').addEventListener('click', () => {
   const link = document.createElement('a');
   link.download = 'drawing.png';
