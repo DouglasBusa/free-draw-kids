@@ -277,8 +277,9 @@ function renderStep() {
   document.getElementById('stepText').textContent = `Step ${currentStep + 1}: ${currentLesson.steps[currentStep]}`;
   const nextBtn = document.getElementById('nextStep');
   if (currentStep >= currentLesson.steps.length - 1) {
-    nextBtn.textContent = 'Back to Lessons';
+    nextBtn.style.display = 'none';
   } else {
+    nextBtn.style.display = '';
     nextBtn.textContent = 'Next Step';
   }
 }
@@ -310,3 +311,24 @@ document.getElementById('prevStep').addEventListener('click', () => {
 });
 
 setTimeout(resizeCanvases, 100);
+
+// Dark mode
+document.getElementById('darkModeBtn').addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  document.getElementById('darkModeBtn').textContent = document.body.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+});
+
+// Lofi music
+const audio = document.getElementById('lofiAudio');
+let musicOn = false;
+document.getElementById('musicBtn').addEventListener('click', () => {
+  if (musicOn) {
+    audio.pause();
+    document.getElementById('musicBtn').textContent = 'Lofi';
+  } else {
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+    document.getElementById('musicBtn').textContent = 'Lofi On';
+  }
+  musicOn = !musicOn;
+});
