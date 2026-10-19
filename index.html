@@ -14,6 +14,10 @@
   <header>
     <h1>✏️ Free Draw Kids</h1>
     <p class="tagline">No ads • No subscriptions • Just draw</p>
+    <div class="header-controls">
+      <button id="darkModeBtn">🌙 Dark Mode</button>
+      <button id="musicBtn">🎵 Lofi</button>
+    </div>
   </header>
 
   <nav class="tabs">
@@ -21,7 +25,6 @@
     <button class="tab" data-tab="learn">Learn to Draw</button>
   </nav>
 
-  <!-- Free Draw Tab -->
   <section id="draw-tab" class="tab-content active">
     <div class="toolbar">
       <div class="colors">
@@ -46,7 +49,6 @@
     <canvas id="drawCanvas"></canvas>
   </section>
 
-  <!-- Learn Tab -->
   <section id="learn-tab" class="tab-content">
     <div class="lesson-list">
       <button class="lesson-card" data-lesson="snail">🐌 Happy Snail</button>
@@ -79,6 +81,9 @@
     </div>
   </section>
 </div>
+<audio id="lofiAudio" loop preload="none">
+  <source src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+</audio>
 <script src="app.js"></script>
 </body>
 </html>
