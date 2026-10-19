@@ -107,9 +107,14 @@ const lessons = {
     draw: [
       (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y, 0.2*s, 0, Math.PI*2); c.stroke(); },
       (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); for (let i = 0; i < 12; i++) { const a = (i/12)*Math.PI*2; c.moveTo(x + Math.cos(a)*0.26*s, y + Math.sin(a)*0.26*s); c.lineTo(x + Math.cos(a)*0.36*s, y + Math.sin(a)*0.36*s); } c.stroke(); },
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.07*s, y - 0.05*s, 0.02*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x + 0.07*s, y - 0.05*s, 0.02*s, 0, Math.PI*2); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.fillStyle = '#333'; [-0.07, 0.07].forEach(dx => { c.beginPath(); c.arc(x + dx*s, y - 0.05*s, 0.02*s, 0, Math.PI*2); c.fill(); }); },
       (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.01*s, 0.1*s, 0.15*Math.PI, 0.85*Math.PI); c.stroke(); },
-      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.fillStyle = '#FFCC00'; c.beginPath(); c.arc(x, y, 0.2*s, 0, Math.PI*2); c.fill(); c.strokeStyle = '#000'; c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); 
+        c.fillStyle = '#FFD93B'; c.beginPath(); c.arc(x, y, 0.2*s, 0, Math.PI*2); c.fill();
+        c.strokeStyle = '#333'; c.beginPath(); c.arc(x, y, 0.2*s, 0, Math.PI*2); c.stroke();
+        c.fillStyle = '#333'; [-0.07, 0.07].forEach(dx => { c.beginPath(); c.arc(x + dx*s, y - 0.05*s, 0.02*s, 0, Math.PI*2); c.fill(); });
+        c.beginPath(); c.arc(x, y + 0.01*s, 0.1*s, 0.15*Math.PI, 0.85*Math.PI); c.stroke();
+      }
     ]
   },
   ladybug: {
@@ -295,7 +300,6 @@ document.getElementById('nextStep').addEventListener('click', () => {
     currentStep++;
     renderStep();
   } else {
-    // Last step: go back to lesson list
     document.querySelector('.lesson-list').classList.remove('hidden');
     document.getElementById('lesson-viewer').classList.add('hidden');
   }
