@@ -299,10 +299,31 @@ function renderStep() {
   document.getElementById('prevStep').disabled = currentStep === 0;
 }
 
+// Lesson cards open on 'click' only (fires once for a mouse click, a tap,
+// or Enter/Space on the button). If a finger moved more than 10px or the
+// list scrolled, it was a scroll, not a tap, so we ignore it.
+let touchStartX = 0, touchStartY = 0, touchStartScroll = 0, touchMoved = false, wasTouch = false;
 document.querySelectorAll('.lesson-card').forEach(card => {
-  const handler = (e) => { e.preventDefault(); showLesson(card.dataset.lesson); };
-  card.addEventListener('click', handler);
-  card.addEventListener('touchend', handler);
+  card.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartScroll = window.scrollY;
+    touchMoved = false;
+    wasTouch = true;
+  }, { passive: true });
+  card.addEventListener('touchmove', (e) => {
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) touchMoved = true;
+  }, { passive: true });
+  card.addEventListener('click', () => {
+    const scrolled = wasTouch && Math.abs(window.scrollY - touchStartScroll) > 10;
+    const ignore = touchMoved || scrolled;
+    touchMoved = false;
+    wasTouch = false;
+    if (ignore) return;
+    showLesson(card.dataset.lesson);
+  });
 });
 
 document.getElementById('backToLessons').addEventListener('click', () => {
