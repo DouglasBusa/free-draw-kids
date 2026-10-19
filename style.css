@@ -197,3 +197,66 @@ body.dark-mode canvas { background: #ffffff !important; }
   text-align: center;
   z-index: 1000;
 }
+
+/* Custom color swatch */
+.custom-color {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: #FF69B4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.custom-color input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.custom-color.active { border-color: #333; transform: scale(1.1); }
+body.dark-mode .custom-color.active { border-color: #fff; }
+
+/* Shade row */
+.shades {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.shade-btn {
+  width: 48px;
+  height: 32px;
+  border-radius: 8px;
+  border: 3px solid #ddd;
+  cursor: pointer;
+}
+.shade-btn.active { border-color: #333; transform: scale(1.1); }
+body.dark-mode .shade-btn { border-color: #444; }
+body.dark-mode .shade-btn.active { border-color: #fff; }
+
+/* Brush style row */
+.brush-styles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.style-btn {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background: #e0e6ed;
+  cursor: pointer;
+}
+.style-btn.active { border-color: #4A90E2; background: #d4e6fb; }
+body.dark-mode .style-btn { background: #2d333b; color: #e8eaed; }
+body.dark-mode .style-btn.active { border-color: #4A90E2; background: #1f3a5c; }

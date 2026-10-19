@@ -48,13 +48,72 @@ function getPos(e) {
   const touch = e.touches ? e.touches[0] : e;
   return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
 }
-function startDraw(e) { e.preventDefault(); isDrawing = true; const pos = getPos(e); lastX = pos.x; lastY = pos.y; ctx.beginPath(); ctx.moveTo(lastX, lastY); }
+let brushStyle = 'normal';
+
+// --- Brush styles: each one paints a single "dab" at a point ---
+function glitterDab(x, y) {
+  const count = 3;
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * brushSize;
+    const r = 0.8 + Math.random() * brushSize / 6;
+    const twinkle = Math.random();
+    ctx.fillStyle = twinkle < 0.2 ? '#FFFFFF' : (twinkle < 0.45 ? shadeColor(currentColor, 30) : currentColor);
+    ctx.beginPath();
+    ctx.arc(x + Math.cos(angle) * dist, y + Math.sin(angle) * dist, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+function softDab(x, y) {
+  const r = brushSize * 1.5;
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, hexToRgba(currentColor, 0.12));
+  g.addColorStop(1, hexToRgba(currentColor, 0));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+function crayonDab(x, y) {
+  ctx.fillStyle = currentColor;
+  const dot = Math.max(2, brushSize / 4);
+  for (let i = 0; i < 10; i++) {
+    if (Math.random() < 0.25) continue; // little gaps make it look waxy
+    ctx.globalAlpha = 0.6 + Math.random() * 0.4;
+    const dx = (Math.random() - 0.5) * brushSize;
+    const dy = (Math.random() - 0.5) * brushSize;
+    ctx.fillRect(x + dx, y + dy, dot, dot);
+  }
+  ctx.globalAlpha = 1;
+}
+const dabs = { glitter: glitterDab, soft: softDab, crayon: crayonDab };
+
+// Fill in dabs between two points so fast strokes stay continuous
+function dabLine(x0, y0, x1, y1) {
+  const dab = dabs[brushStyle];
+  const gap = brushStyle === 'soft' ? Math.max(1, brushSize / 4) : 2;
+  const steps = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / gap));
+  for (let i = 1; i <= steps; i++) {
+    dab(x0 + (x1 - x0) * i / steps, y0 + (y1 - y0) * i / steps);
+  }
+}
+
+function startDraw(e) {
+  e.preventDefault(); isDrawing = true;
+  const pos = getPos(e); lastX = pos.x; lastY = pos.y;
+  ctx.beginPath(); ctx.moveTo(lastX, lastY);
+  if (!isEraser && brushStyle !== 'normal') dabs[brushStyle](lastX, lastY);
+}
 function draw(e) {
   if (!isDrawing) return; e.preventDefault();
   const pos = getPos(e);
-  ctx.lineWidth = isEraser ? brushSize * 2 : brushSize;
-  ctx.strokeStyle = isEraser ? '#FFFFFF' : currentColor;
-  ctx.lineTo(pos.x, pos.y); ctx.stroke();
+  if (isEraser || brushStyle === 'normal') {
+    ctx.lineWidth = isEraser ? brushSize * 2 : brushSize;
+    ctx.strokeStyle = isEraser ? '#FFFFFF' : currentColor;
+    ctx.lineTo(pos.x, pos.y); ctx.stroke();
+  } else {
+    dabLine(lastX, lastY, pos.x, pos.y);
+  }
   lastX = pos.x; lastY = pos.y;
 }
 function stopDraw() { isDrawing = false; ctx.beginPath(); }
@@ -67,11 +126,90 @@ canvas.addEventListener('touchstart', startDraw, { passive: false });
 canvas.addEventListener('touchmove', draw, { passive: false });
 canvas.addEventListener('touchend', stopDraw);
 
-document.querySelectorAll('.color-btn').forEach(btn => {
+// --- Colors, shades and custom color ---
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function hexToRgba(hex, alpha) {
+  const [r, g, b] = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+function rgbToHsl([r, g, b]) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0, sat = 0;
+  if (max !== min) {
+    const d = max - min;
+    sat = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  return [h, sat * 100, l * 100];
+}
+function hslToHex(h, sat, l) {
+  sat /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12;
+  const a = sat * Math.min(l, 1 - l);
+  const f = n => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))));
+  return '#' + [f(0), f(8), f(4)].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+// amount > 0 makes it lighter, < 0 darker (in lightness points)
+function shadeColor(hex, amount) {
+  const [h, sat, l] = rgbToHsl(hexToRgb(hex));
+  return hslToHex(h, sat, Math.max(0, Math.min(100, l + amount)));
+}
+
+function setColor(color) {
+  currentColor = color;
+  isEraser = false;
+  document.getElementById('eraserBtn').classList.remove('active');
+}
+
+const shadeButtons = document.querySelectorAll('.shade-btn');
+const shadeSteps = [30, 15, 0, -15, -30]; // very light, light, base, dark, very dark
+function updateShades(baseColor) {
+  shadeButtons.forEach((btn, i) => {
+    const color = i === 2 ? baseColor.toUpperCase() : shadeColor(baseColor, shadeSteps[i]);
+    btn.dataset.color = color;
+    btn.style.background = color;
+    btn.classList.toggle('active', i === 2);
+  });
+}
+shadeButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    shadeButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    currentColor = btn.dataset.color;
+    setColor(btn.dataset.color);
+  });
+});
+
+function pickBaseColor(color, activeEl) {
+  document.querySelectorAll('.color-btn, .custom-color').forEach(b => b.classList.remove('active'));
+  activeEl.classList.add('active');
+  setColor(color);
+  updateShades(color);
+}
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('click', () => pickBaseColor(btn.dataset.color, btn));
+});
+const customInput = document.getElementById('customColor');
+const customSwatch = document.querySelector('.custom-color');
+customInput.addEventListener('input', () => {
+  customSwatch.style.background = customInput.value;
+  pickBaseColor(customInput.value, customSwatch);
+});
+updateShades(currentColor);
+
+// --- Brush style buttons ---
+document.querySelectorAll('.style-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    brushStyle = btn.dataset.style;
     isEraser = false;
     document.getElementById('eraserBtn').classList.remove('active');
   });

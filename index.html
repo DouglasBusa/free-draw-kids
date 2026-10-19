@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Free Draw Kids</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#4A90E2">
@@ -39,6 +39,20 @@
         <button class="color-btn" data-color="#AF52DE" style="background:#AF52DE"></button>
         <button class="color-btn" data-color="#8E8E93" style="background:#8E8E93"></button>
         <button class="color-btn" data-color="#FFFFFF" style="background:#FFF; border:1px solid #ccc"></button>
+        <label class="custom-color" title="Pick any color">🎨<input type="color" id="customColor" value="#FF69B4" aria-label="Custom color"></label>
+      </div>
+      <div class="shades" aria-label="Lighter and darker shades">
+        <button class="shade-btn" aria-label="Very light"></button>
+        <button class="shade-btn" aria-label="Light"></button>
+        <button class="shade-btn active" aria-label="Base color"></button>
+        <button class="shade-btn" aria-label="Dark"></button>
+        <button class="shade-btn" aria-label="Very dark"></button>
+      </div>
+      <div class="brush-styles">
+        <button class="style-btn active" data-style="normal">🖌️ Normal</button>
+        <button class="style-btn" data-style="glitter">✨ Glitter</button>
+        <button class="style-btn" data-style="soft">🌫️ Soft</button>
+        <button class="style-btn" data-style="crayon">🖍️ Crayon</button>
       </div>
       <div class="tools">
         <label>Size <input type="range" id="brushSize" min="2" max="40" value="8"></label>
@@ -87,6 +101,6 @@
 <audio id="lofiAudio" loop preload="none">
   <source src="audio/happy-lullaby.mp3" type="audio/mpeg">
 </audio>
-<script src="app.js?v=6"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>
