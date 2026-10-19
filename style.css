@@ -8,7 +8,7 @@ body {
   padding-top: env(safe-area-inset-top);
   transition: background 0.2s, color 0.2s;
 }
-body.dark {
+body.dark-mode {
   background: #1a1d23;
   color: #e8eaed;
 }
@@ -18,7 +18,7 @@ header {
 }
 h1 { font-size: 1.8rem; color: #4A90E2; }
 .tagline { font-size: 0.9rem; color: #666; margin-top: 4px; }
-body.dark .tagline { color: #aaa; }
+body.dark-mode .tagline { color: #aaa; }
 .header-controls {
   display: flex;
   gap: 8px;
@@ -33,7 +33,7 @@ body.dark .tagline { color: #aaa; }
   background: #e0e6ed;
   cursor: pointer;
 }
-body.dark .header-controls button {
+body.dark-mode .header-controls button {
   background: #2d333b;
   color: #e8eaed;
 }
@@ -55,8 +55,8 @@ body.dark .header-controls button {
   cursor: pointer;
 }
 .tab.active { background: #4A90E2; color: white; }
-body.dark .tab { background: #2d333b; color: #e8eaed; }
-body.dark .tab.active { background: #4A90E2; color: white; }
+body.dark-mode .tab { background: #2d333b; color: #e8eaed; }
+body.dark-mode .tab.active { background: #4A90E2; color: white; }
 
 .tab-content { display: none; }
 .tab-content.active { display: block; }
@@ -68,7 +68,7 @@ body.dark .tab.active { background: #4A90E2; color: white; }
   margin-bottom: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
-body.dark .toolbar { background: #252a31; }
+body.dark-mode .toolbar { background: #252a31; }
 .colors {
   display: flex;
   flex-wrap: wrap;
@@ -84,7 +84,7 @@ body.dark .toolbar { background: #252a31; }
   cursor: pointer;
 }
 .color-btn.active { border-color: #333; transform: scale(1.1); }
-body.dark .color-btn.active { border-color: #fff; }
+body.dark-mode .color-btn.active { border-color: #fff; }
 
 .tools {
   display: flex;
@@ -101,7 +101,7 @@ body.dark .color-btn.active { border-color: #fff; }
   background: #e0e6ed;
   cursor: pointer;
 }
-body.dark .tools button, body.dark .tools label { background: #2d333b; color: #e8eaed; }
+body.dark-mode .tools button, body.dark-mode .tools label { background: #2d333b; color: #e8eaed; }
 .tools button:active { background: #c0c6cd; }
 #eraserBtn.active { background: #FF3B30; color: white; }
 
@@ -109,7 +109,7 @@ body.dark .tools button, body.dark .tools label { background: #2d333b; color: #e
   width: 100%;
   height: 60vh;
   min-height: 400px;
-  background: white;
+  background: white !important;
   border-radius: 12px;
   touch-action: none;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
@@ -130,7 +130,7 @@ body.dark .tools button, body.dark .tools label { background: #2d333b; color: #e
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   cursor: pointer;
 }
-body.dark .lesson-card { background: #252a31; color: #e8eaed; }
+body.dark-mode .lesson-card { background: #252a31; color: #e8eaed; }
 .lesson-card:active { transform: scale(0.97); }
 
 .hidden { display: none !important; }
@@ -142,7 +142,7 @@ body.dark .lesson-card { background: #252a31; color: #e8eaed; }
   background: #e0e6ed;
   font-size: 1rem;
 }
-body.dark #backToLessons { background: #2d333b; color: #e8eaed; }
+body.dark-mode #backToLessons { background: #2d333b; color: #e8eaed; }
 #lessonTitle { text-align: center; margin-bottom: 12px; color: #4A90E2; }
 
 .lesson-steps {
@@ -172,9 +172,12 @@ body.dark #backToLessons { background: #2d333b; color: #e8eaed; }
   cursor: pointer;
 }
 .hint { text-align: center; margin-top: 16px; color: #666; font-size: 0.95rem; }
-body.dark .hint { color: #aaa; }
+body.dark-mode .hint { color: #aaa; }
 
 @media (max-width: 600px) {
   h1 { font-size: 1.5rem; }
   #drawCanvas { height: 55vh; }
 }
+/* Canvases always stay white, even in dark mode */
+body.dark-mode canvas { background: #ffffff !important; }
+.step-info button:disabled { opacity: 0.4; cursor: default; }

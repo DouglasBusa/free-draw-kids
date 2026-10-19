@@ -282,6 +282,7 @@ function renderStep() {
     nextBtn.style.display = '';
     nextBtn.textContent = 'Next Step';
   }
+  document.getElementById('prevStep').disabled = currentStep === 0;
 }
 
 document.querySelectorAll('.lesson-card').forEach(card => {
@@ -312,23 +313,41 @@ document.getElementById('prevStep').addEventListener('click', () => {
 
 setTimeout(resizeCanvases, 100);
 
-// Dark mode
-document.getElementById('darkModeBtn').addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  document.getElementById('darkModeBtn').textContent = document.body.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+// Dark mode (only changes the page around the canvases; canvases stay white)
+const darkModeBtn = document.getElementById('darkModeBtn');
+function setDarkMode(on) {
+  document.body.classList.toggle('dark-mode', on);
+  darkModeBtn.textContent = on ? '☀️ Light Mode' : '🌙 Dark Mode';
+  try { localStorage.setItem('darkMode', on ? '1' : '0'); } catch (e) {}
+}
+let savedDark = false;
+try { savedDark = localStorage.getItem('darkMode') === '1'; } catch (e) {}
+setDarkMode(savedDark);
+darkModeBtn.addEventListener('click', () => {
+  setDarkMode(!document.body.classList.contains('dark-mode'));
 });
 
-// Lofi music
+// Lofi music (play() only runs from a click, so browsers allow it)
 const audio = document.getElementById('lofiAudio');
-let musicOn = false;
-document.getElementById('musicBtn').addEventListener('click', () => {
-  if (musicOn) {
-    audio.pause();
-    document.getElementById('musicBtn').textContent = 'Lofi';
+const musicBtn = document.getElementById('musicBtn');
+function updateMusicBtn() {
+  musicBtn.textContent = audio.paused ? '🎵 Play Lofi' : '⏸ Pause Lofi';
+}
+audio.volume = 0.3;
+audio.addEventListener('play', updateMusicBtn);
+audio.addEventListener('pause', updateMusicBtn);
+audio.addEventListener('error', () => { musicBtn.textContent = '🎵 Music unavailable'; });
+musicBtn.addEventListener('click', () => {
+  if (audio.paused) {
+    const playing = audio.play();
+    if (playing) {
+      playing.catch(err => {
+        console.warn('Lofi could not play:', err);
+        updateMusicBtn();
+      });
+    }
   } else {
-    audio.volume = 0.3;
-    audio.play().catch(() => {});
-    document.getElementById('musicBtn').textContent = 'Lofi On';
+    audio.pause();
   }
-  musicOn = !musicOn;
 });
+updateMusicBtn();
