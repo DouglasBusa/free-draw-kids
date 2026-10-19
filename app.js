@@ -10,7 +10,6 @@ let brushSize = 8;
 let isEraser = false;
 let lastX = 0, lastY = 0;
 
-// Resize canvases
 function resizeCanvases() {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -35,7 +34,6 @@ function resizeCanvases() {
 window.addEventListener('resize', resizeCanvases);
 resizeCanvases();
 
-// Drawing helpers
 function getPos(e) {
   const rect = canvas.getBoundingClientRect();
   const touch = e.touches ? e.touches[0] : e;
@@ -60,7 +58,6 @@ canvas.addEventListener('touchstart', startDraw, { passive: false });
 canvas.addEventListener('touchmove', draw, { passive: false });
 canvas.addEventListener('touchend', stopDraw);
 
-// Tools
 document.querySelectorAll('.color-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -83,7 +80,6 @@ document.getElementById('saveBtn').addEventListener('click', () => {
   link.click();
 });
 
-// Tabs
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -93,160 +89,160 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// Lessons data (Artie + Halloween)
+// Lessons with Artie's improved drawings
 const lessons = {
   snail: {
     title: "Happy Snail",
     steps: ["Draw a big circle for the shell.", "Draw a swirl inside the circle.", "Draw a long oval under the shell for the body.", "Add two little antenna lines with dots.", "Give it a big smile!"],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-20, 50, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-20, 25, 0.5, Math.PI*1.5); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2, h/2+40, 70, 25, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-15, h/2-60); c.lineTo(w/2-25, h/2-90); c.stroke(); c.beginPath(); c.arc(w/2-25, h/2-90, 4, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(w/2+15, h/2-60); c.lineTo(w/2+25, h/2-90); c.stroke(); c.beginPath(); c.arc(w/2+25, h/2-90, 4, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+30, 12, 0.2, Math.PI-0.2); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x + 0.08*s, y - 0.04*s, 0.2*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h), cx = x + 0.08*s, cy = y - 0.04*s; c.beginPath(); for (let t = 0; t <= Math.PI*6; t += 0.05) { const r = 0.16*s * (t/(Math.PI*6)); const px = cx + r*Math.cos(t), py = cy + r*Math.sin(t); t===0 ? c.moveTo(px,py) : c.lineTo(px,py); } c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x - 0.02*s, y + 0.18*s, 0.34*s, 0.06*s, 0, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(x - 0.27*s, y + 0.07*s, 0.08*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.31*s, y); c.lineTo(x - 0.36*s, y - 0.13*s); c.moveTo(x - 0.23*s, y); c.lineTo(x - 0.2*s, y - 0.13*s); c.stroke(); c.beginPath(); c.arc(x - 0.36*s, y - 0.13*s, 0.02*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x - 0.2*s, y - 0.13*s, 0.02*s, 0, Math.PI*2); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.3*s, y + 0.05*s, 0.012*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x - 0.24*s, y + 0.05*s, 0.012*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x - 0.27*s, y + 0.08*s, 0.03*s, 0.15*Math.PI, 0.85*Math.PI); c.stroke(); }
     ]
   },
   sun: {
     title: "Smiley Sun",
     steps: ["Draw a big circle.", "Add short rays all around.", "Draw two dots for eyes.", "Add a big happy smile.", "Color it yellow!"],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2, 55, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { for(let i=0;i<10;i++){ const a=i*Math.PI/5; c.beginPath(); c.moveTo(w/2+Math.cos(a)*60, h/2+Math.sin(a)*60); c.lineTo(w/2+Math.cos(a)*85, h/2+Math.sin(a)*85); c.stroke(); } },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-15, h/2-10, 5, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+15, h/2-10, 5, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+10, 20, 0.2, Math.PI-0.2); c.stroke(); },
-      (c,w,h) => { c.fillStyle='#FFCC00'; c.beginPath(); c.arc(w/2, h/2, 55, 0, Math.PI*2); c.fill(); c.strokeStyle='#000'; c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y, 0.2*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); for (let i = 0; i < 12; i++) { const a = (i/12)*Math.PI*2; c.moveTo(x + Math.cos(a)*0.26*s, y + Math.sin(a)*0.26*s); c.lineTo(x + Math.cos(a)*0.36*s, y + Math.sin(a)*0.36*s); } c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.07*s, y - 0.05*s, 0.02*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x + 0.07*s, y - 0.05*s, 0.02*s, 0, Math.PI*2); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.01*s, 0.1*s, 0.15*Math.PI, 0.85*Math.PI); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.fillStyle = '#FFCC00'; c.beginPath(); c.arc(x, y, 0.2*s, 0, Math.PI*2); c.fill(); c.strokeStyle = '#000'; c.stroke(); }
     ]
   },
   ladybug: {
     title: "Cute Ladybug",
     steps: ["Draw a big circle for the body.", "Add a half circle head.", "Draw a line down the middle.", "Add round dots.", "Draw two antennas."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+10, 55, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-20, 30, Math.PI, 0); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2, h/2-20); c.lineTo(w/2, h/2+65); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-20, h/2+10, 8, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+20, h/2+15, 8, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2-10, h/2+35, 6, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-10, h/2-40); c.lineTo(w/2-20, h/2-60); c.stroke(); c.beginPath(); c.moveTo(w/2+10, h/2-40); c.lineTo(w/2+20, h/2-60); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.06*s, 0.25*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.17*s, 0.11*s, Math.PI, 0); c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x, y - 0.17*s); c.lineTo(x, y + 0.31*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [[-0.12,-0.03],[-0.15,0.1],[-0.07,0.2],[0.12,-0.03],[0.15,0.1],[0.07,0.2]].forEach(([dx,dy]) => { c.beginPath(); c.arc(x + dx*s, y + dy*s, 0.035*s, 0, Math.PI*2); c.fill(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.04*s, y - 0.27*s); c.quadraticCurveTo(x - 0.06*s, y - 0.36*s, x - 0.12*s, y - 0.37*s); c.moveTo(x + 0.04*s, y - 0.27*s); c.quadraticCurveTo(x + 0.06*s, y - 0.36*s, x + 0.12*s, y - 0.37*s); c.stroke(); c.beginPath(); c.arc(x - 0.12*s, y - 0.37*s, 0.018*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x + 0.12*s, y - 0.37*s, 0.018*s, 0, Math.PI*2); c.fill(); }
     ]
   },
   monster: {
     title: "Silly Monster",
     steps: ["Draw a big wiggly blob.", "Add 1, 2, or 3 eyes.", "Draw a big mouth with triangle teeth.", "Add horns or spikes.", "Draw little arms and feet."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2, h/2, 70, 55, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-20, h/2-15, 10, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+15, h/2-10, 8, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+20, 25, 0.3, Math.PI-0.3); c.stroke(); c.beginPath(); c.moveTo(w/2-10, h/2+15); c.lineTo(w/2-5, h/2+25); c.lineTo(w/2, h/2+15); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-30, h/2-40); c.lineTo(w/2-40, h/2-70); c.stroke(); c.beginPath(); c.moveTo(w/2+25, h/2-45); c.lineTo(w/2+35, h/2-75); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-50, h/2+10); c.lineTo(w/2-80, h/2+20); c.stroke(); c.beginPath(); c.moveTo(w/2+50, h/2+10); c.lineTo(w/2+80, h/2+20); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); for (let a = 0; a <= Math.PI*2 + 0.01; a += 0.05) { const k = 1 + 0.05*Math.sin(a*5); const px = x + Math.cos(a)*0.24*s*k, py = y + Math.sin(a)*0.27*s*k; a===0 ? c.moveTo(px,py) : c.lineTo(px,py); } c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [[-0.1,-0.08,0.055],[0.1,-0.08,0.055],[0,-0.18,0.045]].forEach(([dx,dy,r]) => { c.beginPath(); c.arc(x + dx*s, y + dy*s, r*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(x + dx*s, y + dy*s, r*0.4*s, 0, Math.PI*2); c.fill(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.13*s, y + 0.05*s); c.quadraticCurveTo(x, y + 0.22*s, x + 0.13*s, y + 0.05*s); c.closePath(); c.stroke(); c.beginPath(); [-0.08,0,0.08].forEach(dx => { c.moveTo(x + (dx-0.03)*s, y + 0.05*s); c.lineTo(x + dx*s, y + 0.1*s); c.lineTo(x + (dx+0.03)*s, y + 0.05*s); }); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.moveTo(x + d*0.17*s, y - 0.2*s); c.lineTo(x + d*0.15*s, y - 0.36*s); c.lineTo(x + d*0.08*s, y - 0.25*s); c.stroke(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.moveTo(x + d*0.24*s, y + 0.02*s); c.lineTo(x + d*0.34*s, y - 0.08*s); c.stroke(); c.beginPath(); c.ellipse(x + d*0.1*s, y + 0.3*s, 0.07*s, 0.035*s, 0, 0, Math.PI*2); c.stroke(); }); }
     ]
   },
   icecream: {
     title: "Ice Cream Cone",
     steps: ["Draw an upside-down triangle cone.", "Add crisscross lines.", "Draw a circle scoop on top.", "Add another scoop if you want.", "Top with a cherry."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-40, h/2+40); c.lineTo(w/2, h/2-40); c.lineTo(w/2+40, h/2+40); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-20, h/2); c.lineTo(w/2+20, h/2+20); c.stroke(); c.beginPath(); c.moveTo(w/2-10, h/2+10); c.lineTo(w/2+15, h/2+30); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-20, 35, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-55, 28, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-85, 10, 0, Math.PI*2); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.02*s); c.lineTo(x + 0.15*s, y + 0.02*s); c.lineTo(x, y + 0.4*s); c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.save(); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.02*s); c.lineTo(x + 0.15*s, y + 0.02*s); c.lineTo(x, y + 0.4*s); c.closePath(); c.clip(); c.beginPath(); for (let i = -3; i <= 3; i++) { const o = i*0.07*s; c.moveTo(x - 0.2*s + o, y); c.lineTo(x + 0.2*s + o, y + 0.4*s); c.moveTo(x + 0.2*s + o, y); c.lineTo(x - 0.2*s + o, y + 0.4*s); } c.stroke(); c.restore(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.02*s, 0.17*s, Math.PI, 0); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.18*s, 0.13*s, Math.PI, 0); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.35*s, 0.04*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(x, y - 0.39*s); c.quadraticCurveTo(x + 0.01*s, y - 0.45*s, x + 0.05*s, y - 0.47*s); c.stroke(); }
     ]
   },
   penguin: {
     title: "Little Penguin",
     steps: ["Draw a big oval body.", "Add a smaller oval tummy.", "Draw two dots for eyes.", "Add a triangle beak.", "Draw two small feet."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2, h/2, 45, 65, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2, h/2+15, 30, 40, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-12, h/2-20, 6, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+12, h/2-20, 6, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2, h/2-5); c.lineTo(w/2-8, h/2+5); c.lineTo(w/2+8, h/2+5); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2-20, h/2+60, 15, 8, 0, 0, Math.PI*2); c.stroke(); c.beginPath(); c.ellipse(w/2+20, h/2+60, 15, 8, 0, 0, Math.PI*2); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x, y, 0.2*s, 0.3*s, 0, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x, y + 0.06*s, 0.13*s, 0.21*s, 0, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.05*s, y - 0.17*s, 0.018*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x + 0.05*s, y - 0.17*s, 0.018*s, 0, Math.PI*2); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.035*s, y - 0.12*s); c.lineTo(x + 0.035*s, y - 0.12*s); c.lineTo(x, y - 0.07*s); c.closePath(); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.ellipse(x + d*0.21*s, y + 0.04*s, 0.045*s, 0.13*s, -d*0.3, 0, Math.PI*2); c.stroke(); c.beginPath(); c.ellipse(x + d*0.08*s, y + 0.31*s, 0.07*s, 0.03*s, 0, 0, Math.PI*2); c.stroke(); }); }
     ]
   },
   robot: {
     title: "Friendly Robot",
     steps: ["Draw a big square body.", "Add a smaller square head.", "Draw circle eyes and a line mouth.", "Add an antenna.", "Draw rectangle arms and legs."],
     draw: [
-      (c,w,h) => { c.strokeRect(w/2-40, h/2, 80, 80); },
-      (c,w,h) => { c.strokeRect(w/2-25, h/2-50, 50, 50); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-10, h/2-30, 6, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+10, h/2-30, 6, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(w/2-15, h/2-15); c.lineTo(w/2+15, h/2-15); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2, h/2-50); c.lineTo(w/2, h/2-70); c.stroke(); c.beginPath(); c.arc(w/2, h/2-70, 5, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.strokeRect(w/2-55, h/2+20, 15, 40); c.strokeRect(w/2+40, h/2+20, 15, 40); c.strokeRect(w/2-20, h/2+80, 15, 25); c.strokeRect(w/2+5, h/2+80, 15, 25); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.rect(x - 0.18*s, y - 0.05*s, 0.36*s, 0.3*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.rect(x - 0.12*s, y - 0.3*s, 0.24*s, 0.19*s); c.stroke(); c.beginPath(); c.rect(x - 0.03*s, y - 0.11*s, 0.06*s, 0.06*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.05*s, y - 0.23*s, 0.028*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(x + 0.05*s, y - 0.23*s, 0.028*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(x - 0.05*s, y - 0.155*s); c.lineTo(x + 0.05*s, y - 0.155*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x, y - 0.3*s); c.lineTo(x, y - 0.38*s); c.stroke(); c.beginPath(); c.arc(x, y - 0.4*s, 0.025*s, 0, Math.PI*2); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.rect(x - 0.26*s, y - 0.03*s, 0.08*s, 0.2*s); c.rect(x + 0.18*s, y - 0.03*s, 0.08*s, 0.2*s); c.rect(x - 0.12*s, y + 0.25*s, 0.07*s, 0.12*s); c.rect(x + 0.05*s, y + 0.25*s, 0.07*s, 0.12*s); c.stroke(); }
     ]
   },
   bunny: {
     title: "Bouncy Bunny",
     steps: ["Draw a small circle head.", "Add a bigger circle body.", "Draw two long oval ears.", "Add eyes and a triangle nose.", "Draw a fluffy tail."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-30, 30, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+30, 45, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2-15, h/2-70, 10, 35, 0, 0, Math.PI*2); c.stroke(); c.beginPath(); c.ellipse(w/2+15, h/2-70, 10, 35, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-8, h/2-35, 4, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+8, h/2-35, 4, 0, Math.PI*2); c.stroke(); c.beginPath(); c.moveTo(w/2, h/2-25); c.lineTo(w/2-6, h/2-15); c.lineTo(w/2+6, h/2-15); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2+40, h/2+20, 12, 0, Math.PI*2); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.1*s, 0.12*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.17*s, 0.17*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.ellipse(x + d*0.055*s, y - 0.32*s, 0.04*s, 0.12*s, d*0.15, 0, Math.PI*2); c.stroke(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.045*s, y - 0.12*s, 0.016*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x + 0.045*s, y - 0.12*s, 0.016*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.moveTo(x - 0.018*s, y - 0.08*s); c.lineTo(x + 0.018*s, y - 0.08*s); c.lineTo(x, y - 0.06*s); c.closePath(); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x + 0.19*s, y + 0.22*s, 0.045*s, 0, Math.PI*2); c.stroke(); }
     ]
   },
   pumpkin: {
     title: "Happy Pumpkin",
     steps: ["Draw a big wide oval.", "Add curvy lines for bumps.", "Draw a stem on top.", "Add triangle eyes and nose.", "Give it a big smile."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2, h/2+10, 70, 50, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-40, h/2-30); c.quadraticCurveTo(w/2-50, h/2+10, w/2-40, h/2+50); c.stroke(); c.beginPath(); c.moveTo(w/2, h/2-40); c.quadraticCurveTo(w/2-10, h/2+10, w/2, h/2+55); c.stroke(); c.beginPath(); c.moveTo(w/2+40, h/2-30); c.quadraticCurveTo(w/2+50, h/2+10, w/2+40, h/2+50); c.stroke(); },
-      (c,w,h) => { c.strokeRect(w/2-8, h/2-55, 16, 20); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-25, h/2-5); c.lineTo(w/2-15, h/2+5); c.lineTo(w/2-35, h/2+5); c.closePath(); c.stroke(); c.beginPath(); c.moveTo(w/2+25, h/2-5); c.lineTo(w/2+15, h/2+5); c.lineTo(w/2+35, h/2+5); c.closePath(); c.stroke(); c.beginPath(); c.moveTo(w/2, h/2+10); c.lineTo(w/2-6, h/2+18); c.lineTo(w/2+6, h/2+18); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+25, 20, 0.3, Math.PI-0.3); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x, y + 0.04*s, 0.3*s, 0.24*s, 0, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x, y + 0.04*s, 0.17*s, 0.24*s, 0, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.03*s, y - 0.2*s); c.lineTo(x - 0.02*s, y - 0.3*s); c.lineTo(x + 0.03*s, y - 0.3*s); c.lineTo(x + 0.03*s, y - 0.2*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); const tri = (cx, cy, r) => { c.beginPath(); c.moveTo(cx - r, cy + r*0.8); c.lineTo(cx + r, cy + r*0.8); c.lineTo(cx, cy - r); c.closePath(); c.stroke(); }; tri(x - 0.1*s, y - 0.03*s, 0.045*s); tri(x + 0.1*s, y - 0.03*s, 0.045*s); tri(x, y + 0.05*s, 0.025*s); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.15*s, y + 0.1*s); c.quadraticCurveTo(x, y + 0.26*s, x + 0.15*s, y + 0.1*s); c.stroke(); }
     ]
   },
   ghost: {
     title: "Friendly Ghost",
     steps: ["Draw a big upside-down U shape.", "Make a wavy bottom.", "Add two oval eyes.", "Draw a little round mouth.", "Add wavy arms."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2, 60, Math.PI, 0); c.stroke(); c.lineTo(w/2+60, h/2+50); c.stroke(); c.lineTo(w/2-60, h/2+50); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-60, h/2+50); c.quadraticCurveTo(w/2-30, h/2+70, w/2, h/2+50); c.quadraticCurveTo(w/2+30, h/2+70, w/2+60, h/2+50); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2-15, h/2-10, 10, 14, 0, 0, Math.PI*2); c.stroke(); c.beginPath(); c.ellipse(w/2+15, h/2-10, 10, 14, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+15, 12, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-50, h/2+10); c.quadraticCurveTo(w/2-70, h/2+20, w/2-50, h/2+30); c.stroke(); c.beginPath(); c.moveTo(w/2+50, h/2+10); c.quadraticCurveTo(w/2+70, h/2+20, w/2+50, h/2+30); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.2*s, y + 0.25*s); c.lineTo(x - 0.2*s, y - 0.08*s); c.arc(x, y - 0.08*s, 0.2*s, Math.PI, 0); c.lineTo(x + 0.2*s, y + 0.25*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x + 0.2*s, y + 0.25*s); for (let i = 0; i < 4; i++) c.quadraticCurveTo(x + (0.15 - 0.1*i)*s, y + (i%2 ? 0.2 : 0.32)*s, x + (0.1 - 0.1*i)*s, y + 0.25*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x - 0.07*s, y - 0.09*s, 0.028*s, 0.045*s, 0, 0, Math.PI*2); c.fill(); c.beginPath(); c.ellipse(x + 0.07*s, y - 0.09*s, 0.028*s, 0.045*s, 0, 0, Math.PI*2); c.fill(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x, y + 0.03*s, 0.03*s, 0.04*s, 0, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.moveTo(x + d*0.2*s, y + 0.04*s); c.quadraticCurveTo(x + d*0.27*s, y + 0.06*s, x + d*0.3*s, y - 0.04*s); c.stroke(); }); }
     ]
   },
   bat: {
     title: "Cute Bat",
     steps: ["Draw a circle body.", "Add two triangle ears.", "Draw zigzag wings.", "Add eyes and a smile.", "Optional little fangs."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2, 35, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-15, h/2-25); c.lineTo(w/2-25, h/2-50); c.lineTo(w/2-5, h/2-30); c.closePath(); c.stroke(); c.beginPath(); c.moveTo(w/2+15, h/2-25); c.lineTo(w/2+25, h/2-50); c.lineTo(w/2+5, h/2-30); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-35, h/2); c.lineTo(w/2-70, h/2-20); c.lineTo(w/2-50, h/2+10); c.lineTo(w/2-80, h/2+20); c.stroke(); c.beginPath(); c.moveTo(w/2+35, h/2); c.lineTo(w/2+70, h/2-20); c.lineTo(w/2+50, h/2+10); c.lineTo(w/2+80, h/2+20); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-10, h/2-5, 5, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+10, h/2-5, 5, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2, h/2+10, 10, 0.2, Math.PI-0.2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-5, h/2+12); c.lineTo(w/2-3, h/2+18); c.stroke(); c.beginPath(); c.moveTo(w/2+5, h/2+12); c.lineTo(w/2+3, h/2+18); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y, 0.12*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.moveTo(x + d*0.09*s, y - 0.08*s); c.lineTo(x + d*0.08*s, y - 0.2*s); c.lineTo(x + d*0.03*s, y - 0.115*s); c.stroke(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.moveTo(x + d*0.115*s, y - 0.04*s); c.quadraticCurveTo(x + d*0.25*s, y - 0.18*s, x + d*0.4*s, y - 0.12*s); c.quadraticCurveTo(x + d*0.36*s, y - 0.02*s, x + d*0.36*s, y + 0.04*s); c.quadraticCurveTo(x + d*0.3*s, y - 0.02*s, x + d*0.24*s, y + 0.04*s); c.quadraticCurveTo(x + d*0.18*s, y - 0.01*s, x + d*0.115*s, y + 0.04*s); c.stroke(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.045*s, y - 0.03*s, 0.018*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x + 0.045*s, y - 0.03*s, 0.018*s, 0, Math.PI*2); c.fill(); c.beginPath(); c.arc(x, y + 0.01*s, 0.05*s, 0.2*Math.PI, 0.8*Math.PI); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-0.022,0.022].forEach(dx => { c.beginPath(); c.moveTo(x + (dx-0.01)*s, y + 0.055*s); c.lineTo(x + dx*s, y + 0.08*s); c.lineTo(x + (dx+0.01)*s, y + 0.055*s); c.stroke(); }); }
     ]
   },
   witchhat: {
     title: "Witch Hat",
     steps: ["Draw a tall triangle.", "Bend the tip a little.", "Add a long oval brim.", "Draw a band.", "Add a buckle."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-30, h/2+40); c.lineTo(w/2, h/2-60); c.lineTo(w/2+30, h/2+40); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2, h/2-60); c.quadraticCurveTo(w/2+15, h/2-70, w/2+10, h/2-50); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.ellipse(w/2, h/2+40, 60, 15, 0, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.strokeRect(w/2-25, h/2+5, 50, 12); },
-      (c,w,h) => { c.strokeRect(w/2-8, h/2+7, 16, 8); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.17*s, y + 0.18*s); c.lineTo(x - 0.06*s, y - 0.15*s); c.moveTo(x + 0.17*s, y + 0.18*s); c.lineTo(x + 0.06*s, y - 0.15*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.06*s, y - 0.15*s); c.quadraticCurveTo(x - 0.02*s, y - 0.3*s, x + 0.2*s, y - 0.32*s); c.quadraticCurveTo(x + 0.04*s, y - 0.25*s, x + 0.06*s, y - 0.15*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.ellipse(x, y + 0.2*s, 0.32*s, 0.07*s, 0, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x - 0.137*s, y + 0.08*s); c.lineTo(x + 0.137*s, y + 0.08*s); c.moveTo(x - 0.16*s, y + 0.15*s); c.lineTo(x + 0.16*s, y + 0.15*s); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.rect(x - 0.045*s, y + 0.065*s, 0.09*s, 0.1*s); c.stroke(); }
     ]
   },
   candy: {
     title: "Yummy Candy",
     steps: ["Draw a circle for the candy.", "Add triangle wrappers on each side.", "Add crinkle lines.", "Draw stripes or dots.", "Color it!"],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2, 40, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-40, h/2-20); c.lineTo(w/2-70, h/2); c.lineTo(w/2-40, h/2+20); c.closePath(); c.stroke(); c.beginPath(); c.moveTo(w/2+40, h/2-20); c.lineTo(w/2+70, h/2); c.lineTo(w/2+40, h/2+20); c.closePath(); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-50, h/2-10); c.lineTo(w/2-55, h/2); c.stroke(); c.beginPath(); c.moveTo(w/2+50, h/2-10); c.lineTo(w/2+55, h/2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2-20, h/2-20); c.lineTo(w/2+20, h/2+20); c.stroke(); c.beginPath(); c.moveTo(w/2-15, h/2+15); c.lineTo(w/2+15, h/2-15); c.stroke(); },
-      (c,w,h) => { c.fillStyle='#FF69B4'; c.beginPath(); c.arc(w/2, h/2, 40, 0, Math.PI*2); c.fill(); c.strokeStyle='#000'; c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y, 0.14*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); [-1,1].forEach(d => { c.beginPath(); c.moveTo(x + d*0.135*s, y - 0.04*s); c.lineTo(x + d*0.32*s, y - 0.13*s); c.lineTo(x + d*0.32*s, y + 0.13*s); c.lineTo(x + d*0.135*s, y + 0.04*s); c.stroke(); }); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); [-1,1].forEach(d => { c.moveTo(x + d*0.2*s, y - 0.03*s); c.lineTo(x + d*0.28*s, y - 0.07*s); c.moveTo(x + d*0.2*s, y); c.lineTo(x + d*0.29*s, y); c.moveTo(x + d*0.2*s, y + 0.03*s); c.lineTo(x + d*0.28*s, y + 0.07*s); }); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.save(); c.beginPath(); c.arc(x, y, 0.14*s, 0, Math.PI*2); c.clip(); c.beginPath(); [-0.1,-0.03,0.04,0.11].forEach(o => { c.moveTo(x + (o-0.12)*s, y + 0.15*s); c.lineTo(x + (o+0.12)*s, y - 0.15*s); }); c.stroke(); c.restore(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.fillStyle = '#FF69B4'; c.beginPath(); c.arc(x, y, 0.14*s, 0, Math.PI*2); c.fill(); c.strokeStyle = '#000'; c.stroke(); }
     ]
   },
   spider: {
     title: "Friendly Spider",
     steps: ["Draw a big circle body.", "Add a smaller head.", "Draw four bendy legs on each side.", "Add two big eyes and a smile.", "Draw a hanging line."],
     draw: [
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2+10, 35, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.arc(w/2, h/2-25, 22, 0, Math.PI*2); c.stroke(); },
-      (c,w,h) => { for(let i=0;i<4;i++){ const y=h/2-5+i*15; c.beginPath(); c.moveTo(w/2-30, y); c.quadraticCurveTo(w/2-60, y-10, w/2-80, y+5); c.stroke(); c.beginPath(); c.moveTo(w/2+30, y); c.quadraticCurveTo(w/2+60, y-10, w/2+80, y+5); c.stroke(); } },
-      (c,w,h) => { c.beginPath(); c.arc(w/2-8, h/2-30, 6, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2+8, h/2-30, 6, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(w/2, h/2-15, 10, 0.2, Math.PI-0.2); c.stroke(); },
-      (c,w,h) => { c.beginPath(); c.moveTo(w/2, h/2-47); c.lineTo(w/2, h/2-80); c.stroke(); }
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y + 0.07*s, 0.15*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x, y - 0.13*s, 0.08*s, 0, Math.PI*2); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); [-1,1].forEach(d => { for (let i = 0; i < 4; i++) { const sy = y + (0.0 + i*0.05)*s; c.moveTo(x + d*0.14*s, sy); c.quadraticCurveTo(x + d*0.27*s, sy - 0.1*s, x + d*0.33*s, sy + (0.02 + i*0.03)*s); } }); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.arc(x - 0.03*s, y - 0.15*s, 0.025*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(x + 0.03*s, y - 0.15*s, 0.025*s, 0, Math.PI*2); c.stroke(); c.beginPath(); c.arc(x, y - 0.11*s, 0.03*s, 0.15*Math.PI, 0.85*Math.PI); c.stroke(); },
+      (c, w, h) => { const x = w/2, y = h/2, s = Math.min(w,h); c.beginPath(); c.moveTo(x, y - 0.21*s); c.lineTo(x, 0); c.stroke(); }
     ]
   }
 };
@@ -270,6 +266,7 @@ function renderStep() {
   guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
   guideCtx.strokeStyle = '#333';
   guideCtx.lineWidth = 3;
+  guideCtx.fillStyle = '#333';
   for (let i = 0; i <= currentStep; i++) {
     if (currentLesson.draw[i]) currentLesson.draw[i](guideCtx, w, h);
   }
